@@ -1,9 +1,9 @@
 #include <iostream>
 
-#include "User.h"
+#include "Object.h"
 int main() {
-    std::string * name=new std::string ("zhangsan");
-    User * pUser=new User(2, name);
-    std::cout << "user:" << pUser->getName() << std::endl;
+    char name[]="lisi";
+    InstrmCpp::Object * pUser=new InstrmCpp::Object((void*)2, name);
+    std::cout << "user:" << pUser->classFullName << std::endl;
     return 0;
 }
