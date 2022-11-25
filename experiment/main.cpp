@@ -2,8 +2,8 @@
 
 #include "Object.h"
 int main() {
-    char name[]="lisi";
-    InstrmCpp::Object * pUser=new InstrmCpp::Object((void*)2, name);
-    std::cout << "user:" << pUser->classFullName << std::endl;
+    char name[]="Product";
+    InstrmCpp::Object * pObj=InstrmCpp::newObject((void*)2, name);
+    std::cout << "clzName:" << pObj->classFullName << std::endl;
     return 0;
 }
