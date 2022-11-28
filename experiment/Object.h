@@ -21,6 +21,7 @@ public:
 public:
     Object(void* _address,  char * _classFullName);
     ~Object();
+    const char* classFullNameForShow();
 
 };
 
@@ -29,6 +30,7 @@ Object* newObject();
 void deleteObject(Object* pointer);
 
 
+Object* newObject(void* _address);
 Object* newObject(void* _address,  char * _classFullName);
 }//end of namespace InstrmCpp
 

@@ -16,6 +16,9 @@ InstrmCpp::Object::Object(void* _address,  char * _classFullName) : address(_add
 
 }
 
+const char* InstrmCpp::Object::classFullNameForShow() {
+    return this->classFullName==NULL?"":this->classFullName;
+}
 InstrmCpp::Object * InstrmCpp::newObject(){
 
 	std::size_t sz=sizeof(Object);
@@ -28,10 +31,16 @@ InstrmCpp::Object * InstrmCpp::newObject(){
 }
 
 
-void deleteObject(InstrmCpp::Object* pointer){
+void InstrmCpp::deleteObject(InstrmCpp::Object* pointer){
 	free(pointer);
 }
 
+InstrmCpp::Object * InstrmCpp::newObject(void* _address){
+    Object* pointer = InstrmCpp::newObject();
+    pointer->address=_address;
+    pointer->classFullName=NULL;
+    return pointer;
+}
 
 InstrmCpp::Object * InstrmCpp::newObject(void* _address,  char * _classFullName){
 	Object* pointer = InstrmCpp::newObject();
