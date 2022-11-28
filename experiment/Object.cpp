@@ -52,23 +52,34 @@ InstrmCpp::Object * InstrmCpp::newObject(void* _address,  char * _classFullName)
 	return pointer;
 }
 
-void InstrmCpp::NodeLinked::beforeInsert(InstrmCpp::Object *object) {
+void InstrmCpp::LinkedList::Header::beforeInsert(InstrmCpp::Object *object) {
     //0. assume: this==header;
-    NodeLinked *header = this;
-    
-    NodeLinked *old_first_node = header->next;
+    InstrmCpp::LinkedList::Header *header = this;
+
+    InstrmCpp::LinkedList::Node *old_first_node = header->firstNode;
     
     //1. create current node
-    NodeLinked *current_node =  (InstrmCpp::NodeLinked*) malloc(sizeof(InstrmCpp::NodeLinked));
+    InstrmCpp::LinkedList::Node *current_node =  (InstrmCpp::LinkedList::Node*) malloc(sizeof(InstrmCpp::LinkedList::Node));
     current_node->value=object;
     
     //2. link old_first_node to current_node
     current_node->next=old_first_node;
     
     //3. link current_node to header
-    header->next=current_node;
+    header->firstNode=current_node;
+
+    //4. count node
+    header->nodeCount+=1;
 
 }
 
-InstrmCpp::NodeLinked * InstrmCpp::linkedList_new=(InstrmCpp::NodeLinked*) malloc(sizeof(InstrmCpp::NodeLinked));
-InstrmCpp::NodeLinked * InstrmCpp::linkedList_delete=(InstrmCpp::NodeLinked*) malloc(sizeof(InstrmCpp::NodeLinked));
+
+InstrmCpp::LinkedList::Header* InstrmCpp::LinkedList::initHeader(InstrmCpp::LinkedList::Header* header){
+    header->firstNode=NULL;
+    header->nodeCount=0;
+    return header;
+}
+InstrmCpp::LinkedList::Header * InstrmCpp::linkedList_new=InstrmCpp::LinkedList::initHeader(
+        (InstrmCpp::LinkedList::Header*) malloc(sizeof(InstrmCpp::LinkedList::Header))  );
+InstrmCpp::LinkedList::Header * InstrmCpp::linkedList_delete=InstrmCpp::LinkedList::initHeader(
+        (InstrmCpp::LinkedList::Header*) malloc(sizeof(InstrmCpp::LinkedList::Header)) );

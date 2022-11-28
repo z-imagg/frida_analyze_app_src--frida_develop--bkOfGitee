@@ -32,17 +32,26 @@ void deleteObject(Object* pointer);
 Object* newObject(void* _address);
 Object* newObject(void* _address,  char * _classFullName);
 
-class NodeLinked{
-protected:
-    NodeLinked* next;
-    Object* value;
+namespace LinkedList{
+    class Node{
+    public:
+        Node* next;
+        Object* value;
 
-public:
-    void beforeInsert(Object* node);
-};
+    };
+    class Header{
+    public:
+        Node* firstNode;
+        int  nodeCount;
+    public:
+        void beforeInsert(Object* node);
+    };
 
-extern NodeLinked *linkedList_new;
-extern NodeLinked *linkedList_delete;
+    Header* initHeader(Header* header);
+}
+
+extern LinkedList::Header *linkedList_new;
+extern LinkedList::Header *linkedList_delete;
 }//end of namespace InstrmCpp
 
 
