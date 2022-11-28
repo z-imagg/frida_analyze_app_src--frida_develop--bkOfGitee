@@ -12,7 +12,6 @@
 #include <string.h>
 namespace InstrmCpp{
 
-
 class Object {
 public:
     void* address;
@@ -32,6 +31,18 @@ void deleteObject(Object* pointer);
 
 Object* newObject(void* _address);
 Object* newObject(void* _address,  char * _classFullName);
+
+class NodeLinked{
+protected:
+    NodeLinked* next;
+    Object* value;
+
+public:
+    void beforeInsert(Object* node);
+};
+
+extern NodeLinked *linkedList_new;
+extern NodeLinked *linkedList_delete;
 }//end of namespace InstrmCpp
 
 
