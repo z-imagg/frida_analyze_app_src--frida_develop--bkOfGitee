@@ -3,4 +3,4 @@ project(experiment)
 
 set(CMAKE_CXX_STANDARD 14)
 
-add_executable(experiment main.cpp Object.cpp Object.h)
+add_executable(experiment main.cpp ZObject.cpp ZObject.h)
