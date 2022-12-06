@@ -8,3 +8,9 @@ experiment/cmake-build-debug/
 dork/.idea/
 
 dork/cmake-build-debug/
+
+dork/firda_example/.idea/
+
+dork/firda_example/__handlers__/
+
+*.exe
