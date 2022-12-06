@@ -47,7 +47,7 @@ class Application(object):
         print("✔ enable_child_gating()")
         session.enable_child_gating()
         print("✔ create_script()")
-        script_text:str=Util.read_text("./script/attach_main_ZUser.js")
+        script_text:str=Util.read_text("./script/attach_operator_new.js")
         script = session.create_script(script_text)
         script.on("message", lambda message, data:
             self._reactor.schedule(lambda: self._on_message(pid, message)))

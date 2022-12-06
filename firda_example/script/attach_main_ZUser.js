@@ -6,8 +6,10 @@ DebugSymbol.load("D:/instrmcpp/dork/cmake-build-debug/dork.exe");
 var mainFunc=DebugSymbol.getFunctionByName("main")
 //message: pid=73552, payload={'type': 'send', 'payload': '0x1'}
 
-var funcAddrLs=DebugSymbol.findFunctionsMatching("*ZUser*");
-for (let funcAddr of [mainFunc,...funcAddrLs]) {
+var clzFuncAddrLs=DebugSymbol.findFunctionsMatching("*ZUser*");
+var funcAddrLs=[mainFunc,...funcAddrLs];
+
+for (let funcAddr of funcAddrLs) {
 Interceptor.attach(funcAddr, {
   onEnter: function (args) {
     send(args[0]);
