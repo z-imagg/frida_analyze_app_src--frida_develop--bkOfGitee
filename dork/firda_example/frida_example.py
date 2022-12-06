@@ -32,12 +32,10 @@ local:core.Device = frida.get_local_device()
 pid:int = local.spawn("dork.exe")
 session = local.attach(pid)
 script = session.create_script("""
-Interceptor.attach(ptr("%s"), {
-    onEnter: function(args) {
-        send(args[0].toInt32());
-    }
-});
-""" % int('00000001400011D1', 16))
+send(Process.enumerateModules()[0].name);
+"""
+# % int('00000001400011D1', 16)
+                               )
 # start .text 00000001400011D1 00000005   R . . . . . .
 def on_message(message, data):
     print(message)
