@@ -11,7 +11,7 @@ https://blog.csdn.net/Qwertyuiop2016/article/details/114284618
 def read_text(fpath:str):
     with open(fpath,"r") as f:
         return f.read()
-script_enumerateModules=read_text("./script/enumerateSymbols.js")
+script_enumerateModules=read_text("./script/findFuncByName_using_DebugSymbol.js")
 
 import frida
 import sys
