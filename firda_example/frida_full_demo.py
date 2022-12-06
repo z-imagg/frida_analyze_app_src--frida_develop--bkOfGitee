@@ -1,3 +1,6 @@
+#!/usr/bin/python
+# -*- coding: UTF-8 -*-
+
 #ref: https://www.anquanke.com/post/id/177597
 from __future__ import print_function
 import frida
@@ -15,11 +18,14 @@ class Application(object):
         self._device = frida.get_local_device()
         self._sessions = set()
 
-        self._device.on("spawn-added", lambda child: self._reactor.schedule(lambda: self._on_delivered(child)))
+        self._device.on("spawn-added", lambda child:
+            self._reactor.schedule(lambda: self._on_delivered(child)))
     #     ValueError: Device does not have a signal named 'delivered', it only has: 'spawn-added', 'spawn-removed', 'child-added', 'child-removed', 'process-crashed', 'output', 'uninjected', 'lost'
 
     def run(self):
+        # ._reactor.schedule(f) : 当前线程 启动新线程 新线程运行内容为f, 直到新线程运行完 才返回当前线程 : 即 主 异步调用 函数f 且 等 该函数f 返回
         self._reactor.schedule(lambda: self._start())
+
         self._reactor.run()
 
     def _start(self):
@@ -36,13 +42,15 @@ class Application(object):
     def _instrument(self, pid):
         print("✔ attach(pid={})".format(pid))
         session = self._device.attach(pid)
-        session.on("detached", lambda reason: self._reactor.schedule(lambda: self._on_detached(pid, session, reason)))
+        session.on("detached", lambda reason:
+            self._reactor.schedule(lambda: self._on_detached(pid, session, reason)))
         print("✔ enable_child_gating()")
         session.enable_child_gating()
         print("✔ create_script()")
         script_text:str=Util.read_text("./script/attach_main_ZUser.js")
         script = session.create_script(script_text)
-        script.on("message", lambda message, data: self._reactor.schedule(lambda: self._on_message(pid, message)))
+        script.on("message", lambda message, data:
+            self._reactor.schedule(lambda: self._on_message(pid, message)))
         print("✔ load()")
         script.load()
         print("✔ resume(pid={})".format(pid))
