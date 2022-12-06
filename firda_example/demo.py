@@ -40,6 +40,7 @@ class Application(object):
         script = session.create_script("""'use strict';
 
 var module = Process.findModuleByName('dork.exe');
+//猜测: DebugSymbol.load 依赖 .exe文件 的 同目录 的 同名 .pdb文件
 DebugSymbol.load("D:/instrmcpp/dork/cmake-build-debug/dork.exe");
 var mainFunc=DebugSymbol.getFunctionByName("main")
 Interceptor.attach(mainFunc, {
