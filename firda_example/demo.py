@@ -21,7 +21,7 @@ class Application(object):
 
     def _start(self):
         # argv = ["/bin/sh", "-c", "cat /etc/hosts"]
-        argv = ["dork.exe"]
+        argv = ["D:/instrmcpp/dork/cmake-build-debug/dork.exe"]
         print("✔ spawn(argv={})".format(argv))
         pid = self._device.spawn(argv)
         self._instrument(pid)
@@ -40,7 +40,7 @@ class Application(object):
         script = session.create_script("""'use strict';
 
 var module = Process.findModuleByName('dork.exe');
-DebugSymbol.load("D:/instrmcpp/dork/firda_example/dork.exe");
+DebugSymbol.load("D:/instrmcpp/dork/cmake-build-debug/dork.exe");
 var mainFunc=DebugSymbol.getFunctionByName("main")
 Interceptor.attach(mainFunc, {
   onEnter: function (args) {

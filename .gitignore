@@ -14,3 +14,5 @@ dork/firda_example/.idea/
 dork/firda_example/__handlers__/
 
 *.exe
+
+firda_example/.idea/
