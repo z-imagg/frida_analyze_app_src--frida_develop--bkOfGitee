@@ -17,9 +17,9 @@ import frida
 import sys
 
 local:core.Device = frida.get_local_device()
-pid:int = local.spawn("dork.exe")
+pid:int = local.spawn("dork.exe",stdio='inherit')
 session:core.Session = local.attach(pid)
-script = session.create_script(script_enumerateModules )
+script:core.Script = session.create_script(script_enumerateModules )
 # % int('00000001400011D1', 16)
 def on_message(message, data):
     print(message)
