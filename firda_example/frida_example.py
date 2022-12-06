@@ -1,6 +1,6 @@
 
 from frida import core
-
+from util import Util
 
 """ ref: 
 https://frida.re/docs/javascript-api/
@@ -8,10 +8,7 @@ https://blog.csdn.net/Qwertyuiop2016/article/details/114284618
 """
 
 
-def read_text(fpath:str):
-    with open(fpath,"r") as f:
-        return f.read()
-script_enumerateModules=read_text("./script/findFuncByName_using_DebugSymbol.js")
+script_enumerateModules=Util.read_text("./script/findFuncByName_using_DebugSymbol.js")
 
 import frida
 import sys

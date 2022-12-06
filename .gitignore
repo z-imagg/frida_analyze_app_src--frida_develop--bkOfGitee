@@ -16,3 +16,5 @@ dork/firda_example/__handlers__/
 *.exe
 
 firda_example/.idea/
+
+*.pyc
