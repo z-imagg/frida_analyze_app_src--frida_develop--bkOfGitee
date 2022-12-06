@@ -32,10 +32,9 @@ local:core.Device = frida.get_local_device()
 pid:int = local.spawn("dork.exe")
 session = local.attach(pid)
 script = session.create_script("""
-//send(Process.enumerateModules()[0].name);
 var modules = Process.enumerateModules();
 for (let module of modules) {
-    send(module.name);
+    send(module);
 }
 """
 # % int('00000001400011D1', 16)
