@@ -4,18 +4,20 @@
 #ref: https://www.anquanke.com/post/id/177597
 from __future__ import print_function
 import frida
-from frida_tools.application import Reactor
+import frida_tools
 import threading
+
+from frida_tools.reactor import Reactor
 
 from util import Util
 
 
 class Application(object):
     def __init__(self):
-        self._stop_requested = threading.Event()
-        self._reactor = Reactor(run_until_return=lambda reactor: self._stop_requested.wait())
+        self._stop_requested:threading.Event = threading.Event()
+        self._reactor:frida_tools.reactor.Reactor = Reactor(run_until_return=lambda reactor: self._stop_requested.wait())
 
-        self._device = frida.get_local_device()
+        self._device:frida.core.Device = frida.get_local_device()
         self._sessions = set()
 
         self._device.on("spawn-added", lambda child:
@@ -32,7 +34,7 @@ class Application(object):
         # argv = ["/bin/sh", "-c", "cat /etc/hosts"]
         argv = ["D:/instrmcpp/dork/cmake-build-debug/dork.exe"]
         print("✔ spawn(argv={})".format(argv))
-        pid = self._device.spawn(argv)
+        pid:int = self._device.spawn(argv)
         self._instrument(pid)
 
     def _stop_if_idle(self):
@@ -41,14 +43,14 @@ class Application(object):
 
     def _instrument(self, pid):
         print("✔ attach(pid={})".format(pid))
-        session = self._device.attach(pid)
+        session:frida.core.Session = self._device.attach(pid)
         session.on("detached", lambda reason:
             self._reactor.schedule(lambda: self._on_detached(pid, session, reason)))
         print("✔ enable_child_gating()")
         session.enable_child_gating()
         print("✔ create_script()")
         script_text:str=Util.read_text("./script/attach_operator_new.js")
-        script = session.create_script(script_text)
+        script:frida.core.Script = session.create_script(script_text)
         script.on("message", lambda message, data:
             self._reactor.schedule(lambda: self._on_message(pid, message)))
         print("✔ load()")
