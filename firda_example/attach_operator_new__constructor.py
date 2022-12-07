@@ -32,7 +32,8 @@ class Application(object):
 
     def _start(self):
         # argv = ["/bin/sh", "-c", "cat /etc/hosts"]
-        argv = ["D:/instrmcpp/dork/cmake-build-debug/dork.exe"]
+        #clang.exe -S -emit-llvm ./User.cpp
+        argv = ["D:/llvm-home/llvm-project/build/Debug/bin/clang.exe","-S","-emit-llvm","D:/instrmcpp/dork_simple/User.cpp"]
         print("✔ spawn(argv={})".format(argv))
         pid:int = self._device.spawn(argv)
         self._instrument(pid)
