@@ -1,0 +1,1 @@
+> 脚本移至 [frida-agent-4instrmcpp](https://gitcode.net/fridaz/frida-agent-4instrmcpp/-/tree/zmain) /*.js

@@ -8,7 +8,7 @@ https://blog.csdn.net/Qwertyuiop2016/article/details/114284618
 """
 
 
-script_enumerateModules=Util.read_text("./script/findFuncByName_using_DebugSymbol.js")
+script_enumerateModules=Util.read_text("D:/frida-home/frida-agent-4instrmcpp/findFuncByName_using_DebugSymbol.js")
 
 import frida
 import sys
