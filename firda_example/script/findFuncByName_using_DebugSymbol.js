@@ -1,6 +1,6 @@
 // https://frida.re/docs/javascript-api/
 
-DebugSymbol.load("D:/instrmcpp/dork/firda_example/dork.exe");
+DebugSymbol.load("D:/instrmcpp/dork/cmake-build-debug/dork.exe");
 var mainFunc=DebugSymbol.getFunctionByName("main");
 //send(mainFunc);
 //{'type': 'send', 'payload': '0x7ff7401e15d0'}

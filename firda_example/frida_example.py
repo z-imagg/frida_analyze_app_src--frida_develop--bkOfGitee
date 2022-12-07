@@ -14,7 +14,7 @@ import frida
 import sys
 
 local:core.Device = frida.get_local_device()
-pid:int = local.spawn("dork.exe",stdio='inherit')
+pid:int = local.spawn("D:/instrmcpp/dork/cmake-build-debug/dork.exe",stdio='inherit')
 session:core.Session = local.attach(pid)
 script:core.Script = session.create_script(script_enumerateModules )
 # % int('00000001400011D1', 16)
