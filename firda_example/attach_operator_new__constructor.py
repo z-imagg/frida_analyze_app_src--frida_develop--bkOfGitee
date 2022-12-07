@@ -49,7 +49,7 @@ class Application(object):
         print("✔ enable_child_gating()")
         session.enable_child_gating()
         print("✔ create_script()")
-        script_text:str=Util.read_text("./script/attach_operator_new.js")
+        script_text:str=Util.read_text("D:/frida-home/frida-agent-4instrmcpp/attach_operator_new__constructor.js")
         script:frida.core.Script = session.create_script(script_text)
         script.on("message", lambda message, data:
             self._reactor.schedule(lambda: self._on_message(pid, message)))
