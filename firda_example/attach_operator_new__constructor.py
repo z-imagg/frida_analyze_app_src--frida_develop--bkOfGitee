@@ -1,8 +1,17 @@
 #!/usr/bin/python
 # -*- coding: UTF-8 -*-
 
+"""
+usage example:
+python D:\instrmcpp\firda_example\attach_operator_new__constructor.py  D:/instrmcpp/dork/cmake-build-debug/dork.exe
+python D:\instrmcpp\firda_example\attach_operator_new__constructor.py  D:/llvm-home/llvm-project/build/Debug/bin/clang.exe -S -emit-llvm D:/instrmcpp/dork_simple/User.cpp
+
+"""
 #ref: https://www.anquanke.com/post/id/177597
 from __future__ import print_function
+
+from typing import List
+
 import frida
 import frida_tools
 import threading
@@ -10,10 +19,16 @@ import threading
 from frida_tools.reactor import Reactor
 
 from util import Util
-
+import sys
 
 class Application(object):
     def __init__(self):
+        # dork_run_cmd:str="D:/llvm-home/llvm-project/build/Debug/bin/clang.exe -S -emit-llvm D:/instrmcpp/dork_simple/User.cpp"
+        if len(sys.argv) <= 1:
+            print(f"{__name__} dork_exe_full_path args_for_dork")
+            exit(2)
+        self.dork_cmd_word_ls:List[str]= sys.argv[1:]
+        self._dork_exe_full_path:str=self.dork_cmd_word_ls[0]
         self._stop_requested:threading.Event = threading.Event()
         self._reactor:frida_tools.reactor.Reactor = Reactor(run_until_return=lambda reactor: self._stop_requested.wait())
 
@@ -33,9 +48,12 @@ class Application(object):
     def _start(self):
         # argv = ["/bin/sh", "-c", "cat /etc/hosts"]
         #clang.exe -S -emit-llvm ./User.cpp
-        argv = ["D:/llvm-home/llvm-project/build/Debug/bin/clang.exe","-S","-emit-llvm","D:/instrmcpp/dork_simple/User.cpp"]
-        print("✔ spawn(argv={})".format(argv))
-        pid:int = self._device.spawn(argv)
+        # dork_run_cmd:str="D:/llvm-home/llvm-project/build/Debug/bin/clang.exe -S -emit-llvm D:/instrmcpp/dork_simple/User.cpp"
+        # argv = ["D:/llvm-home/llvm-project/build/Debug/bin/clang.exe","-S","-emit-llvm","D:/instrmcpp/dork_simple/User.cpp"]
+        # argv=Util.cmd_str_to_list(dork_run_cmd)
+        dork_exe_full_path=self.dork_cmd_word_ls[0]
+        print(f"✔ spawn(argv={self.dork_cmd_word_ls})" )
+        pid:int = self._device.spawn(self.dork_cmd_word_ls)
         self._instrument(pid)
 
     def _stop_if_idle(self):
@@ -50,7 +68,8 @@ class Application(object):
         print("✔ enable_child_gating()")
         session.enable_child_gating()
         print("✔ create_script()")
-        script_text:str=Util.read_text("D:/frida-home/frida-agent-4instrmcpp/attach_operator_new__constructor.js")
+        script_text:str=Util.read_text("/frida-home/frida-agent-4instrmcpp/attach_operator_new__constructor.js")
+        script_text=script_text.replace("__dork_exe_full_path__",self._dork_exe_full_path)
         script:frida.core.Script = session.create_script(script_text)
         script.on("message", lambda message, data:
             self._reactor.schedule(lambda: self._on_message(pid, message)))
