@@ -5,7 +5,7 @@
 usage example:
 python D:\instrmcpp\firda_example\attach_operator_new__constructor.py  D:/instrmcpp/dork/cmake-build-debug/dork.exe
 python D:\instrmcpp\firda_example\attach_operator_new__constructor.py  D:/llvm-home/llvm-project/build/Debug/bin/clang.exe -S -emit-llvm D:/instrmcpp/dork_simple/User.cpp
-
+python D:\instrmcpp\firda_example\attach_operator_new__constructor.py  clang.exe -S -emit-llvm ./User.cpp
 """
 #ref: https://www.anquanke.com/post/id/177597
 from __future__ import print_function
@@ -23,11 +23,12 @@ import sys
 
 class Application(object):
     def __init__(self):
-        # dork_run_cmd:str="D:/llvm-home/llvm-project/build/Debug/bin/clang.exe -S -emit-llvm D:/instrmcpp/dork_simple/User.cpp"
         if len(sys.argv) <= 1:
             print(f"{__name__} dork_exe_full_path args_for_dork")
             exit(2)
         self.dork_cmd_word_ls:List[str]= sys.argv[1:]
+        #_dork_exe_full_path=["D:/llvm-home/llvm-project/build/Debug/bin/clang.exe","-S","-emit-llvm","D:/instrmcpp/dork_simple/User.cpp"]
+        # want to run :"D:/llvm-home/llvm-project/build/Debug/bin/clang.exe -S -emit-llvm D:/instrmcpp/dork_simple/User.cpp"
         self._dork_exe_full_path:str=self.dork_cmd_word_ls[0]
         self._stop_requested:threading.Event = threading.Event()
         self._reactor:frida_tools.reactor.Reactor = Reactor(run_until_return=lambda reactor: self._stop_requested.wait())
@@ -46,12 +47,6 @@ class Application(object):
         self._reactor.run()
 
     def _start(self):
-        # argv = ["/bin/sh", "-c", "cat /etc/hosts"]
-        #clang.exe -S -emit-llvm ./User.cpp
-        # dork_run_cmd:str="D:/llvm-home/llvm-project/build/Debug/bin/clang.exe -S -emit-llvm D:/instrmcpp/dork_simple/User.cpp"
-        # argv = ["D:/llvm-home/llvm-project/build/Debug/bin/clang.exe","-S","-emit-llvm","D:/instrmcpp/dork_simple/User.cpp"]
-        # argv=Util.cmd_str_to_list(dork_run_cmd)
-        dork_exe_full_path=self.dork_cmd_word_ls[0]
         print(f"✔ spawn(argv={self.dork_cmd_word_ls})" )
         pid:int = self._device.spawn(self.dork_cmd_word_ls)
         self._instrument(pid)
