@@ -1,0 +1,4 @@
+[submodule "frida-agent-4instrmcpp"]
+	path = frida-agent-4instrmcpp
+	url = git@gitcode.net:fridaz/frida-agent-4instrmcpp.git
+	branch = zmain
