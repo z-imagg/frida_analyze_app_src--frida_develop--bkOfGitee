@@ -1,3 +1,8 @@
+from pathlib import Path
+
+"""
+用法例子：  python frida_example.py c:/Windows/notepad.exe  d:/1.txt /pubx/instrmcpp/frida-agent-4instrmcpp/enumerateImports.js
+"""
 
 from frida import core
 from util import Util
@@ -23,16 +28,21 @@ https://blog.csdn.net/Qwertyuiop2016/article/details/114284618
 import frida
 import sys
 
-assert len(sys.argv)>4
+print(sys.argv)
+assert len(sys.argv)>=4
 dork_exe_path:str=sys.argv[1] #/instrmcpp/dork/cmake-build-debug/dork.exe
 dork_args_file:str=sys.argv[2] #给目标的参数 存放的文件路径
 js_path:str=sys.argv[3] #"/frida-home/frida-agent-4instrmcpp/enumerateImports.js"
 
 dork_args:str=Util.read_text(dork_args_file) #读取目标参数
+dork_exe_name:str=Path(dork_exe_path).name
 
-script_enumerateModules=Util.read_text(js_path)
+script_enumerateModules:str=Util.read_text(js_path)
+script_enumerateModules=script_enumerateModules.replace("dork.exe",dork_exe_name)
+
 local:core.Device = frida.get_local_device()
 pid:int = local.spawn(dork_exe_path,argv=dork_args.split(' '),stdio='pipe')
+print(f"pid:{pid}")
 session:core.Session = local.attach(pid)
 script:core.Script = session.create_script(script_enumerateModules )
 # % int('00000001400011D1', 16)

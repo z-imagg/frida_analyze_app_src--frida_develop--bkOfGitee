@@ -18,7 +18,7 @@ import threading
 
 from frida_tools.reactor import Reactor
 
-from util import Util
+from firda_example.example.util import Util
 import sys
 
 class Application(object):
