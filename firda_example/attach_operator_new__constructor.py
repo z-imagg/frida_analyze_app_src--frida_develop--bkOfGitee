@@ -97,7 +97,7 @@ class Application(object):
         self._reactor.run()
 
     def _start(self):
-        print(f"✔ spawn(program={self.dork_exe_path}, argv={self._dork_args})" )
+        print(f"✔ spawn(program={self.dork_exe_path}, argv={self._dork_args},cwd={self.dork_cwd})" )
         pid:int = self._device.spawn(program=self.dork_exe_path, argv=self._dork_args,cwd=self.dork_cwd)
         self._instrument(pid)
 
