@@ -35,6 +35,10 @@ newFuncDetailLs:
 argi:0,arg1
 argi:1,arg2
 
+
+echo '-c  echo_args.c' > clang_args.txt
+python attach_operator_new__constructor.py /usr/bin/clang  clang_args.txt  /pubx/instrmcpp/frida-agent-4instrmcpp/attach_operator_new__constructor.js
+
 """
 #ref: https://www.anquanke.com/post/id/177597
 from __future__ import print_function
@@ -59,10 +63,11 @@ def _assert(err:bool,errMsg:str):
 class Application(object):
     def __init__(self):
         print(sys.argv)
-        _assert(not len(sys.argv) >= 4, f"{__name__} dork_exe_path dork_arg_file js_path")
+        _assert(not len(sys.argv) >= 5, f"{__name__} dork_exe_path dork_arg_file dork_cwd js_path ")
         dork_exe_path: str = sys.argv[1]  # /instrmcpp/dork/cmake-build-debug/dork.exe
         dork_arg_file: str = sys.argv[2]  # 给目标的参数 存放的文件路径
-        js_path: str = sys.argv[3]  # "/frida-home/frida-agent-4instrmcpp/enumerateImports.js"
+        self.dork_cwd:str=sys.argv[3]
+        js_path: str = sys.argv[4]  # "/frida-home/frida-agent-4instrmcpp/enumerateImports.js"
 
         _dork_arg_str: str = Util.read_text(dork_arg_file)  # 读取目标参数
         dork_exe_name: str = Path(dork_exe_path).name
@@ -93,7 +98,7 @@ class Application(object):
 
     def _start(self):
         print(f"✔ spawn(program={self.dork_exe_path}, argv={self._dork_args})" )
-        pid:int = self._device.spawn(program=self.dork_exe_path, argv=self._dork_args)
+        pid:int = self._device.spawn(program=self.dork_exe_path, argv=self._dork_args,cwd=self.dork_cwd)
         self._instrument(pid)
 
     def _stop_if_idle(self):
