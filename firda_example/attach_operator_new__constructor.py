@@ -3,6 +3,7 @@
 
 """
 usage example:
+python attach_operator_new__constructor.py c:/Windows/notepad.exe  d:/1.txt  /pubx/instrmcpp/frida-agent-4instrmcpp/attach_operator_new__constructor.js
 python D:\instrmcpp\firda_example\attach_operator_new__constructor.py  D:/instrmcpp/dork/cmake-build-debug/dork.exe
 python D:\instrmcpp\firda_example\attach_operator_new__constructor.py  D:/llvm-home/llvm-project/build/Debug/bin/clang.exe -S -emit-llvm D:/instrmcpp/dork_simple/User.cpp
 python D:\instrmcpp\firda_example\attach_operator_new__constructor.py  clang.exe -S -emit-llvm ./User.cpp
@@ -19,7 +20,7 @@ import threading
 
 from frida_tools.reactor import Reactor
 
-from firda_example.example.util import Util
+from util import Util
 import sys
 
 def _assert(err:bool,errMsg:str):
@@ -30,7 +31,7 @@ def _assert(err:bool,errMsg:str):
 class Application(object):
     def __init__(self):
         print(sys.argv)
-        _assert(len(sys.argv) >= 4, f"{__name__} dork_exe_full_path args_for_dork")
+        _assert(not len(sys.argv) >= 4, f"{__name__} dork_exe_path dork_arg_file js_path")
         dork_exe_path: str = sys.argv[1]  # /instrmcpp/dork/cmake-build-debug/dork.exe
         dork_arg_file: str = sys.argv[2]  # 给目标的参数 存放的文件路径
         js_path: str = sys.argv[3]  # "/frida-home/frida-agent-4instrmcpp/enumerateImports.js"
