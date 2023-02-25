@@ -80,6 +80,7 @@ class Application(object):
         self.dork_exe_name: str = dork_exe_name
         self._js_path:str=js_path
         self._dork_args:List[str]=list(filter(lambda k: k is not None and len(k) > 0, _dork_arg_str.split(' ')  ))
+        self._dork_args: List[str] =list(map(lambda k:k.strip(),  self._dork_args))
         self._stop_requested:threading.Event = threading.Event()
         self._reactor:frida_tools.reactor.Reactor = Reactor(run_until_return=lambda reactor: self._stop_requested.wait())
 
