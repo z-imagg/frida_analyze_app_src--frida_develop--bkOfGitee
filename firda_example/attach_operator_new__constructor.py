@@ -115,6 +115,7 @@ class Application(object):
         session.enable_child_gating()
         print("✔ create_script()")
         script_text:str=Util.read_text(self._js_path)#"/frida-home/frida-agent-4instrmcpp/attach_operator_new__constructor.js"
+        script_text=script_text.replace("dork.exe", self.dork_exe_name)
         script_text=script_text.replace("__dork_exe_full_path__", self.dork_exe_path)
         script:frida.core.Script = session.create_script(script_text)
         script.on("message", lambda message, data:
