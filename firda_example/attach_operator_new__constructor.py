@@ -20,10 +20,21 @@ clang  -c  echo_args.c
 clang echo_args.o -o echo_args
 echo 'arg1 arg2' > _arg.txt
 python attach_operator_new__constructor.py echo_args  _arg.txt  /pubx/instrmcpp/frida-agent-4instrmcpp/attach_operator_new__constructor.js
+输出:
 
-python D:\instrmcpp\firda_example\attach_operator_new__constructor.py  D:/instrmcpp/dork/cmake-build-debug/dork.exe
-python D:\instrmcpp\firda_example\attach_operator_new__constructor.py  D:/llvm-home/llvm-project/build/Debug/bin/clang.exe -S -emit-llvm D:/instrmcpp/dork_simple/User.cpp
-python D:\instrmcpp\firda_example\attach_operator_new__constructor.py  clang.exe -S -emit-llvm ./User.cpp
+['attach_operator_new__constructor.py', 'echo_args', '_arg.txt', '/pubx/instrmcpp/frida-agent-4instrmcpp/attach_operator_new__constructor.js']
+✔ spawn(program=echo_args, argv=['arg1', 'arg2\n'])
+✔ attach(pid=3780)
+✔ enable_child_gating()
+✔ create_script()
+✔ load()
+mainFunc:0x400530 echo_args!main
+constructorDetailLs:
+newFuncDetailLs:
+✔ resume(pid=3780)
+argi:0,arg1
+argi:1,arg2
+
 """
 #ref: https://www.anquanke.com/post/id/177597
 from __future__ import print_function
