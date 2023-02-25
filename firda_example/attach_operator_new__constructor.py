@@ -4,6 +4,23 @@
 """
 usage example:
 python attach_operator_new__constructor.py c:/Windows/notepad.exe  d:/1.txt  /pubx/instrmcpp/frida-agent-4instrmcpp/attach_operator_new__constructor.js
+
+echo '''
+#include <stdio.h>
+int main(int argc, char **argv )
+{
+int i=0;
+for(i=0; i< argc; i++){
+  printf("argi:%d,%s\n",i,argv[i]);
+}
+return 0;
+}
+''' > echo_args.c
+clang  -c  echo_args.c
+clang echo_args.o -o echo_args
+echo 'arg1 arg2' > _arg.txt
+python attach_operator_new__constructor.py echo_args  _arg.txt  /pubx/instrmcpp/frida-agent-4instrmcpp/attach_operator_new__constructor.js
+
 python D:\instrmcpp\firda_example\attach_operator_new__constructor.py  D:/instrmcpp/dork/cmake-build-debug/dork.exe
 python D:\instrmcpp\firda_example\attach_operator_new__constructor.py  D:/llvm-home/llvm-project/build/Debug/bin/clang.exe -S -emit-llvm D:/instrmcpp/dork_simple/User.cpp
 python D:\instrmcpp\firda_example\attach_operator_new__constructor.py  clang.exe -S -emit-llvm ./User.cpp
