@@ -10,6 +10,7 @@ python D:\instrmcpp\firda_example\attach_operator_new__constructor.py  clang.exe
 #ref: https://www.anquanke.com/post/id/177597
 from __future__ import print_function
 
+from pathlib import Path
 from typing import List
 
 import frida
@@ -21,15 +22,30 @@ from frida_tools.reactor import Reactor
 from firda_example.example.util import Util
 import sys
 
+def _assert(err:bool,errMsg:str):
+    if err is None or err:
+        raise Exception(errMsg)
+
+
 class Application(object):
     def __init__(self):
-        if len(sys.argv) <= 1:
-            print(f"{__name__} dork_exe_full_path args_for_dork")
-            exit(2)
-        self.dork_cmd_word_ls:List[str]= sys.argv[1:]
+        print(sys.argv)
+        _assert(len(sys.argv) >= 4, f"{__name__} dork_exe_full_path args_for_dork")
+        dork_exe_path: str = sys.argv[1]  # /instrmcpp/dork/cmake-build-debug/dork.exe
+        dork_arg_file: str = sys.argv[2]  # 给目标的参数 存放的文件路径
+        js_path: str = sys.argv[3]  # "/frida-home/frida-agent-4instrmcpp/enumerateImports.js"
+
+        _dork_arg_str: str = Util.read_text(dork_arg_file)  # 读取目标参数
+        dork_exe_name: str = Path(dork_exe_path).name
+
+
+        # self.dork_cmd_word_ls:List[str]= sys.argv[1:]
         #_dork_exe_full_path=["D:/llvm-home/llvm-project/build/Debug/bin/clang.exe","-S","-emit-llvm","D:/instrmcpp/dork_simple/User.cpp"]
         # want to run :"D:/llvm-home/llvm-project/build/Debug/bin/clang.exe -S -emit-llvm D:/instrmcpp/dork_simple/User.cpp"
-        self._dork_exe_full_path:str=self.dork_cmd_word_ls[0]
+        self.dork_exe_path:str=dork_exe_path
+        self.dork_exe_name: str = dork_exe_name
+        self._js_path:str=js_path
+        self._dork_args:List[str]=list(filter(lambda k: k is not None and len(k) > 0, _dork_arg_str.split(' ')  ))
         self._stop_requested:threading.Event = threading.Event()
         self._reactor:frida_tools.reactor.Reactor = Reactor(run_until_return=lambda reactor: self._stop_requested.wait())
 
@@ -47,8 +63,8 @@ class Application(object):
         self._reactor.run()
 
     def _start(self):
-        print(f"✔ spawn(argv={self.dork_cmd_word_ls})" )
-        pid:int = self._device.spawn(self.dork_cmd_word_ls)
+        print(f"✔ spawn(program={self.dork_exe_path}, argv={self._dork_args})" )
+        pid:int = self._device.spawn(program=self.dork_exe_path, argv=self._dork_args)
         self._instrument(pid)
 
     def _stop_if_idle(self):
@@ -63,8 +79,8 @@ class Application(object):
         print("✔ enable_child_gating()")
         session.enable_child_gating()
         print("✔ create_script()")
-        script_text:str=Util.read_text("/frida-home/frida-agent-4instrmcpp/attach_operator_new__constructor.js")
-        script_text=script_text.replace("__dork_exe_full_path__",self._dork_exe_full_path)
+        script_text:str=Util.read_text(self._js_path)#"/frida-home/frida-agent-4instrmcpp/attach_operator_new__constructor.js"
+        script_text=script_text.replace("__dork_exe_full_path__", self.dork_exe_path)
         script:frida.core.Script = session.create_script(script_text)
         script.on("message", lambda message, data:
             self._reactor.schedule(lambda: self._on_message(pid, message)))
