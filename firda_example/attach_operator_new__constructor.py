@@ -63,11 +63,12 @@ def _assert(err:bool,errMsg:str):
 class Application(object):
     def __init__(self):
         print(sys.argv)
-        _assert(not len(sys.argv) >= 5, f"{__name__} dork_exe_path dork_arg_file dork_cwd js_path ")
+        _assert(not len(sys.argv) >= 6, f"{__name__} dork_exe_path dork_arg_file dork_cwd js_path ")
         dork_exe_path: str = sys.argv[1]  # /instrmcpp/dork/cmake-build-debug/dork.exe
         dork_arg_file: str = sys.argv[2]  # 给目标的参数 存放的文件路径
         self.dork_cwd:str=sys.argv[3]
         js_path: str = sys.argv[4]  # "/frida-home/frida-agent-4instrmcpp/enumerateImports.js"
+        _ignore_func_addr_ls_: str = sys.argv[5]  # _ignore_func_addr_ls_: "0x10fa6f0,0x74db80"
 
         _dork_arg_str: str = Util.read_text(dork_arg_file)  # 读取目标参数
         dork_exe_name: str = Path(dork_exe_path).name
@@ -78,6 +79,7 @@ class Application(object):
         # want to run :"D:/llvm-home/llvm-project/build/Debug/bin/clang.exe -S -emit-llvm D:/instrmcpp/dork_simple/User.cpp"
         self.dork_exe_path:str=dork_exe_path
         self.dork_exe_name: str = dork_exe_name
+        self._ignore_func_addr_ls_:str=_ignore_func_addr_ls_
         self._js_path:str=js_path
         self._dork_args:List[str]=list(filter(lambda k: k is not None and len(k) > 0, _dork_arg_str.split(' ')  ))
         self._dork_args: List[str] =list(map(lambda k:k.strip(),  self._dork_args))
@@ -99,7 +101,7 @@ class Application(object):
 
     def _start(self):
         print(f"✔ spawn(program={self.dork_exe_path}, argv={self._dork_args},cwd={self.dork_cwd})" )
-        pid:int = self._device.spawn(program=self.dork_exe_path, argv=self._dork_args,cwd=self.dork_cwd)
+        pid:int = self._device.spawn(program=self.dork_exe_path, argv=self._dork_args,cwd=self.dork_cwd,stdio="pipe")
         self._instrument(pid)
 
     def _stop_if_idle(self):
@@ -117,6 +119,7 @@ class Application(object):
         script_text:str=Util.read_text(self._js_path)#"/frida-home/frida-agent-4instrmcpp/attach_operator_new__constructor.js"
         script_text=script_text.replace("dork.exe", self.dork_exe_name)
         script_text=script_text.replace("__dork_exe_full_path__", self.dork_exe_path)
+        script_text=script_text.replace("/*_ignore_func_addr_ls_*/", self._ignore_func_addr_ls_)
         print(f"script_text:{script_text}")
         script:frida.core.Script = session.create_script(script_text)
         script.on("message", lambda message, data:
