@@ -13,7 +13,7 @@ where frida-trace
 frida-trace   -i "!"  -f  dork.exe
 '''
 # sys.argv=['D:\\Python38\\Scripts\\frida-trace.exe', '-i', '!', '-f', 'dork.exe']
-sys.argv=['xxxx', '-i', '!', '-f', 'dork.exe']
+sys.argv=['xxxx', '-i', '!', '-f', 'C:/Windows/system32/notepad.exe -ccc']
 
 app = TracerApplication()
 app.run()
