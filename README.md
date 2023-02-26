@@ -1,39 +1,18 @@
-# instrmcpp
+##  frida 跟踪 clang 编译过程 并能正常结束 但没有正常产生编译结果文件 echo_args.o
+```bash
+mkdir /pubx/; cd /pubx/
+git clone git@gitcode.net:pubz/instrmcpp.git
 
-#### 介绍
-{**以下是 Gitee 平台说明，您可以替换此简介**
-Gitee 是 OSCHINA 推出的基于 Git 的代码托管平台（同时支持 SVN）。专为开发者提供稳定、高效、安全的云端软件开发协作平台
-无论是个人、团队、或是企业，都能够用 Gitee 实现代码托管、项目管理、协作开发。企业项目请看 [https://gitee.com/enterprises](https://gitee.com/enterprises)}
+cd /pubx/instrmcpp/frida_main/
+bash -x attach_develop.sh 
+```
 
-#### 软件架构
-软件架构说明
+> 运行"bash -x attach_develop.sh"会结束不了, ctrl+c 结束, 并多次运行 "bash -x attach_develop.sh", 大约4到5次后, 本行运行可以正常结束, 不过并未产生编译结果文件echo_args.o; 
 
+> 运行"bash -x attach_develop.sh"正常结束时产生的文件 frida_main/_funcNameLsIgnore_.txt 内容如下:
+```text
+,_ZN4llvm3sys7Process18UseANSIEscapeCodesEb,_ZN4llvm3opt6OptionD1Ev,_ZN4llvm18format_object_base4homeEv,_ZN4llvm3sys4path6nativeERNS_15SmallVectorImplIcEE,_ZN4llvm7APFloat18semanticsPrecisionERKNS_12fltSemanticsE,_ZN4llvm10CallbackVH6anchorEv
+```
 
-#### 安装教程
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 使用说明
-
-1.  xxxx
-2.  xxxx
-3.  xxxx
-
-#### 参与贡献
-
-1.  Fork 本仓库
-2.  新建 Feat_xxx 分支
-3.  提交代码
-4.  新建 Pull Request
-
-
-#### 特技
-
-1.  使用 Readme\_XXX.md 来支持不同的语言，例如 Readme\_en.md, Readme\_zh.md
-2.  Gitee 官方博客 [blog.gitee.com](https://blog.gitee.com)
-3.  你可以 [https://gitee.com/explore](https://gitee.com/explore) 这个地址来了解 Gitee 上的优秀开源项目
-4.  [GVP](https://gitee.com/gvp) 全称是 Gitee 最有价值开源项目，是综合评定出的优秀开源项目
-5.  Gitee 官方提供的使用手册 [https://gitee.com/help](https://gitee.com/help)
-6.  Gitee 封面人物是一档用来展示 Gitee 会员风采的栏目 [https://gitee.com/gitee-stars/](https://gitee.com/gitee-stars/)
+> 多次运行"bash -x attach_develop.sh"能正常结束的具体过程说明：
+> 每次运行 "bash -x attach_develop.sh" 遇到frida attach出错的函数名会写入文件 frida_main/_funcNameLsIgnore_.txt, 下次运行 从该文件读函数名从而忽略上次报错的函数名, 如此几次下来 即不再报错了
