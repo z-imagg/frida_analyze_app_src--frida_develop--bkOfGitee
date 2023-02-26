@@ -30,12 +30,11 @@ def _assert(err:bool,errMsg:str):
 class Application(object):
     def __init__(self):
         print(sys.argv)
-        _assert(not len(sys.argv) >= 6, f"{__name__} dork_exe_path dork_arg_file dork_cwd js_path ")
+        _assert(not len(sys.argv) >= 5, f"{__name__} dork_exe_path dork_arg_file dork_cwd js_path ")
         dork_exe_path: str = sys.argv[1]  # /instrmcpp/dork/cmake-build-debug/dork.exe
         dork_arg_file: str = sys.argv[2]  # 给目标的参数 存放的文件路径
         self.dork_cwd:str=sys.argv[3]
         js_path: str = sys.argv[4]  # "/frida-home/frida-agent-4instrmcpp/enumerateImports.js"
-        _ignore_func_addr_ls_: str = sys.argv[5]  # _ignore_func_addr_ls_: "0x10fa6f0,0x74db80"
 
         _dork_arg_str: str = Util.read_text(dork_arg_file)  # 读取目标参数
         dork_exe_name: str = Path(dork_exe_path).name
@@ -46,7 +45,6 @@ class Application(object):
         # want to run :"D:/llvm-home/llvm-project/build/Debug/bin/clang.exe -S -emit-llvm D:/instrmcpp/dork_simple/User.cpp"
         self.dork_exe_path:str=dork_exe_path
         self.dork_exe_name: str = dork_exe_name
-        self._ignore_func_addr_ls_:str=_ignore_func_addr_ls_
         self._js_path:str=js_path
         self._dork_args:List[str]=list(filter(lambda k: k is not None and len(k) > 0, _dork_arg_str.split(' ')  ))
         self._dork_args: List[str] =list(map(lambda k:k.strip(),  self._dork_args))
