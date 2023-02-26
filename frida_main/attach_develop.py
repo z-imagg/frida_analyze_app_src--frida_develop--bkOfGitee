@@ -3,41 +3,8 @@
 
 """
 usage example:
-python attach_operator_new__constructor.py c:/Windows/notepad.exe  d:/1.txt  /pubx/instrmcpp/frida-agent-4instrmcpp/attach_operator_new__constructor.js
-
-echo '''
-#include <stdio.h>
-int main(int argc, char **argv )
-{
-int i=0;
-for(i=0; i< argc; i++){
-  printf("argi:%d,%s\n",i,argv[i]);
-}
-return 0;
-}
-''' > echo_args.c
-clang  -c  echo_args.c
-clang echo_args.o -o echo_args
-echo 'arg1 arg2' > _arg.txt
-python attach_operator_new__constructor.py echo_args  _arg.txt  /pubx/instrmcpp/frida-agent-4instrmcpp/attach_operator_new__constructor.js
-输出:
-
-['attach_operator_new__constructor.py', 'echo_args', '_arg.txt', '/pubx/instrmcpp/frida-agent-4instrmcpp/attach_operator_new__constructor.js']
-✔ spawn(program=echo_args, argv=['arg1', 'arg2\n'])
-✔ attach(pid=3780)
-✔ enable_child_gating()
-✔ create_script()
-✔ load()
-mainFunc:0x400530 echo_args!main
-constructorDetailLs:
-newFuncDetailLs:
-✔ resume(pid=3780)
-argi:0,arg1
-argi:1,arg2
-
-
-echo '-c  echo_args.c' > clang_args.txt
-python attach_operator_new__constructor.py /usr/bin/clang  clang_args.txt  /pubx/instrmcpp/frida-agent-4instrmcpp/attach_operator_new__constructor.js
+python dork_exe_path dork_arg_file dork_cwd js_path
+@see attach_develop.sh
 
 """
 #ref: https://www.anquanke.com/post/id/177597
