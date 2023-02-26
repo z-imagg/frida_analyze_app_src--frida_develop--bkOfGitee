@@ -35,20 +35,16 @@ class Application(object):
         print(sys.argv)
         _assert(not len(sys.argv) >= 5, f"{__name__} dork_exe_path dork_arg_file dork_cwd js_path ")
         self.dork_exe_path: str = sys.argv[1]  # /instrmcpp/dork/cmake-build-debug/dork.exe
-        _dork_arg_file: str = sys.argv[2]  # 给目标的参数 存放的文件路径
-        self.dork_cwd:str=sys.argv[3]
-        js_path: str = sys.argv[4]  # "/frida-home/frida-agent-4instrmcpp/enumerateImports.js"
-
-        _dork_arg_str: str = Util.read_text(_dork_arg_file)  # 读取目标参数
         self.dork_exe_name: str = Path(self.dork_exe_path).name
 
-
-        # self.dork_cmd_word_ls:List[str]= sys.argv[1:]
-        #_dork_exe_full_path=["D:/llvm-home/llvm-project/build/Debug/bin/clang.exe","-S","-emit-llvm","D:/instrmcpp/dork_simple/User.cpp"]
-        # want to run :"D:/llvm-home/llvm-project/build/Debug/bin/clang.exe -S -emit-llvm D:/instrmcpp/dork_simple/User.cpp"
-        self._js_path:str=js_path
+        _dork_arg_file: str = sys.argv[2]  # 给目标的参数 存放的文件路径
+        _dork_arg_str: str = Util.read_text(_dork_arg_file)  # 读取目标参数
         self._dork_args: List[str] =LambdaUtil.lsFilter(_dork_arg_str.split(' '),lambda k: k is not None and len(k) > 0)
         self._dork_args: List[str] =LambdaUtil.ls2ls_(self._dork_args,lambda k:k.strip())
+
+        self.dork_cwd:str=sys.argv[3]
+        self._js_path:str= sys.argv[4]  # "/frida-home/frida-agent-4instrmcpp/enumerateImports.js"
+
         self._stop_requested:threading.Event = threading.Event()
         self._reactor:frida_tools.reactor.Reactor = Reactor(run_until_return=lambda reactor: self._stop_requested.wait())
 
