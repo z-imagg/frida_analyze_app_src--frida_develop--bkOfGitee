@@ -22,5 +22,3 @@ python attach_develop.py $clang_real_path   clang_args.txt  `pwd`  frida_js/deve
 
 
 
-
-done
