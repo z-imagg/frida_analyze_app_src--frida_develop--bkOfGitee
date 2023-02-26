@@ -37,14 +37,15 @@ class Application(object):
         self.dork_exe_path: str = sys.argv[1]  # /instrmcpp/dork/cmake-build-debug/dork.exe
         self.dork_exe_name: str = Path(self.dork_exe_path).name
 
-        _dork_arg_file: str = sys.argv[2]  # 给目标的参数 存放的文件路径
-        _dork_arg_str: str = Util.read_text(_dork_arg_file)  # 读取目标参数
-        self._dork_args: List[str] =LambdaUtil.lsFilter(_dork_arg_str.split(' '),lambda k: k is not None and len(k) > 0)
+        self._dork_args: List[str] =LambdaUtil.lsFilter(
+            Util.read_text(sys.argv[2]) # 给目标的参数 存放的文件路径, 读取目标参数
+                .strip().split(' '),
+            lambda k: k is not None and len(k) > 0)
         self._dork_args: List[str] =LambdaUtil.ls2ls(self._dork_args,lambda k:k.strip())
 
         self.dork_cwd:str=sys.argv[3]
         self._js_path:str= sys.argv[4]  # "/frida-home/frida-agent-4instrmcpp/enumerateImports.js"
-        self._funcNameLsIgnore_:str= Util.read_text(sys.argv[5])  # such as : echo "memmove" > funcNameLsIgnore.txt
+        self._funcNameLsIgnore_:str= Util.read_text(sys.argv[5]).strip()  # such as : echo "memmove" > funcNameLsIgnore.txt
 
         self._stop_requested:threading.Event = threading.Event()
         self._reactor:frida_tools.reactor.Reactor = Reactor(run_until_return=lambda reactor: self._stop_requested.wait())
