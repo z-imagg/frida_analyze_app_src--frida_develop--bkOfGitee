@@ -8,7 +8,7 @@ class LambdaUtil:
     lambda工具（遍历工具）
     """
     @staticmethod
-    def ls2ls_(inLs:List[Any], funcOnEleK)->List[Any]:
+    def ls2ls(inLs:List[Any], funcOnEleK)->List[Any]:
         """
         列表转列表
         :param inLs: 输入列表
