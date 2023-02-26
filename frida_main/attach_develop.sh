@@ -17,7 +17,7 @@ return 0;
 #clang echo_args.o -o echo_args
 
 echo -n '-c  echo_args.c -v' > clang_args.txt
-echo -n '_nothing,' > _funcNameLsIgnore_.txt
+#echo -n '_nothing,' > _funcNameLsIgnore_.txt
 echo -n 'frida-,libpthread-' > _moduleNamePrefixListIgnore_.txt
 clang_real_path=$(readlink  -f `which clang`)
 python attach_develop.py $clang_real_path   clang_args.txt  `pwd`  frida_js/develop.js _funcNameLsIgnore_.txt
