@@ -19,7 +19,7 @@ return 0;
 echo '-c  echo_args.c -v' > clang_args.txt
 echo 'memmove,free,strlen,_Znwm,_ZdlPv' > _funcNameLsIgnore_.txt
 clang_real_path=$(readlink  -f `which clang`)
-python attach_develop.py $clang_real_path   clang_args.txt  `pwd`  frida_js/develop.js
+python attach_develop.py $clang_real_path   clang_args.txt  `pwd`  frida_js/develop.js _funcNameLsIgnore_.txt
 
 
 
