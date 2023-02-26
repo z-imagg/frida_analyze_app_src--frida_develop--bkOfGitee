@@ -17,7 +17,8 @@ return 0;
 #clang echo_args.o -o echo_args
 
 echo '-c  echo_args.c -v' > clang_args.txt
-python attach_develop.py /usr/bin/clang   clang_args.txt  `pwd`  frida_js/develop.js
+clang_real_path=$(readlink  -f `which clang`)
+python attach_develop.py $clang_real_path   clang_args.txt  `pwd`  frida_js/develop.js
 
 
 
