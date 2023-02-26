@@ -33,7 +33,7 @@ def _assert(err:bool,errMsg:str):
 class Application(object):
     def __init__(self):
         print(sys.argv)
-        _assert(not len(sys.argv) >= 5, f"{__name__} dork_exe_path dork_arg_file dork_cwd js_path ")
+        _assert(not len(sys.argv) >= 6, f"{__name__} dork_exe_path dork_arg_file dork_cwd js_path _filePath_funcNameLsIgnore")
         self.dork_exe_path: str = sys.argv[1]  # /instrmcpp/dork/cmake-build-debug/dork.exe
         self.dork_exe_name: str = Path(self.dork_exe_path).name
 
@@ -44,6 +44,7 @@ class Application(object):
 
         self.dork_cwd:str=sys.argv[3]
         self._js_path:str= sys.argv[4]  # "/frida-home/frida-agent-4instrmcpp/enumerateImports.js"
+        self._funcNameLsIgnore_:str= Util.read_text(sys.argv[5])  # such as : echo "memmove" > funcNameLsIgnore.txt
 
         self._stop_requested:threading.Event = threading.Event()
         self._reactor:frida_tools.reactor.Reactor = Reactor(run_until_return=lambda reactor: self._stop_requested.wait())
@@ -79,8 +80,9 @@ class Application(object):
         session.enable_child_gating()
         print("✔ create_script()")
         script_text:str=Util.read_text(self._js_path)#"/frida-home/frida-agent-4instrmcpp/attach_operator_new__constructor.js"
-        script_text=script_text.replace("dork.exe", self.dork_exe_name)
+        script_text=script_text.replace("_dork_exe_", self.dork_exe_name)
         script_text=script_text.replace("__dork_exe_full_path__", self.dork_exe_path)
+        script_text=script_text.replace("_funcNameLsIgnore_", self._funcNameLsIgnore_)
         print(f"script_text:{script_text}")
         script:frida.core.Script = session.create_script(script_text)
         script.on("message", lambda message, data:
