@@ -52,3 +52,5 @@ echo -n "$argVal" > _argSearch_target_.txt
 clang_real_path=$(readlink  -f `which clang`)
 python attach_develop.py $clang_real_path   clang_args.txt  `pwd`  frida_js/develop.js _funcNameLsIgnore_.txt
 #python attach_develop.py c:/Windows/notepad.exe  d:/1.txt  /pubx/instrmcpp/frida-agent-4instrmcpp/attach_operator_new__constructor.js _funcNameLsIgnore_.txt
+pid=$!
+echo -n $pid > ./py_pid
