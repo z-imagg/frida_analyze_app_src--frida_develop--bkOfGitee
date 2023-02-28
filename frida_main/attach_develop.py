@@ -82,7 +82,7 @@ class Application(object):
         script_text:str=Util.read_text(self._js_path)#"/frida-home/frida-agent-4instrmcpp/attach_operator_new__constructor.js"
         script_text=script_text.replace("_dork_exe_", self.dork_exe_name)
         script_text=script_text.replace("__dork_exe_full_path__", self.dork_exe_path)
-        print(f"script_text:{script_text}")
+        # print(f"script_text:{script_text}")
         script:frida.core.Script = session.create_script(script_text)
         script.on("message", lambda message, data:
             self._reactor.schedule(lambda: self._on_message(pid, message)))
