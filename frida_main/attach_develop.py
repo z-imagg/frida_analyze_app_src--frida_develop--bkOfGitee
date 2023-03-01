@@ -63,7 +63,7 @@ class Application(object):
         self._reactor.run()
 
     def _start(self):
-        print(f"✔ spawn(program={self.dork_exe_path}, argv={self._dork_args},cwd={self.dork_cwd})" )
+        print(f"y spawn(program={self.dork_exe_path}, argv={self._dork_args},cwd={self.dork_cwd})" )
         pid:int = self._device.spawn(program=self.dork_exe_path, argv=self._dork_args,cwd=self.dork_cwd,stdio="pipe")
         self._instrument(pid)
 
@@ -72,13 +72,13 @@ class Application(object):
             self._stop_requested.set()
 
     def _instrument(self, pid):
-        print("✔ attach(pid={})".format(pid))
+        print("y attach(pid={})".format(pid))
         session:frida.core.Session = self._device.attach(pid)
         session.on("detached", lambda reason:
             self._reactor.schedule(lambda: self._on_detached(pid, session, reason)))
-        print("✔ enable_child_gating()")
+        print("y enable_child_gating()")
         session.enable_child_gating()
-        print("✔ create_script()")
+        print("y create_script()")
         script_text:str=Util.read_text(self._js_path)#"/frida-home/frida-agent-4instrmcpp/attach_operator_new__constructor.js"
         script_text=script_text.replace("_dork_exe_", self.dork_exe_name)
         script_text=script_text.replace("__dork_exe_full_path__", self.dork_exe_path)
@@ -86,23 +86,23 @@ class Application(object):
         script:frida.core.Script = session.create_script(script_text)
         script.on("message", lambda message, data:
             self._reactor.schedule(lambda: self._on_message(pid, message)))
-        print("✔ load()")
+        print("y load()")
         script.load()
-        print("✔ resume(pid={})".format(pid))
+        print("y resume(pid={})".format(pid))
         self._device.resume(pid)
         self._sessions.add(session)
 
     def _on_delivered(self, child):
-        print("⚡ delivered: {}".format(child))
+        print("x delivered: {}".format(child))
         self._instrument(child.pid)
 
     def _on_detached(self, pid, session, reason):
-        print("⚡ detached: pid={}, reason='{}'".format(pid, reason))
+        print("x detached: pid={}, reason='{}'".format(pid, reason))
         self._sessions.remove(session)
         self._reactor.schedule(self._stop_if_idle, delay=0.5)
 
     def _on_message(self, pid, message):
-        print("⚡ message: pid={}, payload={}".format(pid, message ))
+        print("x message: pid={}, payload={}".format(pid, message ))
 
 
 app = Application()
