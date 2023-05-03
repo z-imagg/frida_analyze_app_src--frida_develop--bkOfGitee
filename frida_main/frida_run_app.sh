@@ -36,7 +36,7 @@ echo -n "$argVal" > _argSearch_target_.txt
 
 
 clang_real_path=$(readlink  -f `which clang`)
-python frida_run_app $clang_real_path   clang_args.txt  `pwd`  frida_js/develop.js _funcNameLsIgnore_.txt  2>&1   | tee -a search.log
-#python frida_run_app c:/Windows/notepad.exe  d:/1.txt  /pubx/instrmcpp/frida-agent-4instrmcpp/attach_operator_new__constructor.js _funcNameLsIgnore_.txt
+python frida_run_app.py $clang_real_path   clang_args.txt  `pwd`  frida_js/develop.js _funcNameLsIgnore_.txt  2>&1   | tee -a search.log
+#python frida_run_app.py c:/Windows/notepad.exe  d:/1.txt  /pubx/instrmcpp/frida-agent-4instrmcpp/attach_operator_new__constructor.js _funcNameLsIgnore_.txt
 pid=$!
 echo -n $pid > ./py_pid
