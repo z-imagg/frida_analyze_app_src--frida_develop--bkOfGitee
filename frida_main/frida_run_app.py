@@ -4,7 +4,7 @@
 """
 usage example:
 python dork_exe_path dork_arg_file dork_cwd js_path
-@see attach_develop.sh
+@see frida_run_app.sh
 
 """
 #ref: https://www.anquanke.com/post/id/177597
