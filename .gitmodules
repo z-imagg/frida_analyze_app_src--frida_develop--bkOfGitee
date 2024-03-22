@@ -1,3 +1,0 @@
-[submodule "frida_main/frida_js"]
-	path = frida_main/frida_js
-	url = git@gitcode.net:fridaz/frida_js.git
