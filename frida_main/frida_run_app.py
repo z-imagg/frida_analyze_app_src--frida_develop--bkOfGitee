@@ -32,7 +32,7 @@ def _assert(err:bool,errMsg:str):
 
 class Application(object):
     def __init__(self):
-        self.app_log_f=open("./app_log.txt","tx")
+        self.app_log_f=open("./app_log.txt","w")
         print(sys.argv)
         # _assert(not len(sys.argv) >= 5, f"{__name__} dork_exe_path dork_arg_file dork_cwd js_path ")
         self.dork_exe_path: str = "/fridaAnlzAp/cgsecurity--testdisk/src/testdisk"  # /instrmcpp/dork/cmake-build-debug/dork.exe
