@@ -32,19 +32,17 @@ def _assert(err:bool,errMsg:str):
 
 class Application(object):
     def __init__(self):
+        self.app_log_f=open("./app_log.txt","w")
         print(sys.argv)
-        _assert(not len(sys.argv) >= 5, f"{__name__} dork_exe_path dork_arg_file dork_cwd js_path ")
-        self.dork_exe_path: str = sys.argv[1]  # /instrmcpp/dork/cmake-build-debug/dork.exe
-        self.dork_exe_name: str = Path(self.dork_exe_path).name
+        # _assert(not len(sys.argv) >= 5, f"{__name__} dork_exe_path dork_arg_file dork_cwd js_path ")
+        self.dork_exe_path: str = "/fridaAnlzAp/cgsecurity--testdisk/src/testdisk"  # /instrmcpp/dork/cmake-build-debug/dork.exe
+        self.dork_exe_name: str = "testdisk"
 
-        self._dork_args: List[str] =LambdaUtil.lsFilter(
-            Util.read_text(sys.argv[2]) # 给目标的参数 存放的文件路径, 读取目标参数
-                .strip().split(' '),
-            lambda k: k is not None and len(k) > 0)
-        self._dork_args: List[str] =LambdaUtil.ls2ls(self._dork_args,lambda k:k.strip())
+        #hd.img　生成　参考:  http://giteaz:3000/bal/cmd-wrap/src/tag/v2.2.simpl/build_testdisk.md
+        self._dork_args: List[str] =[self.dork_exe_path, "/fridaAnlzAp/cgsecurity--testdisk/hd.img"]
 
-        self.dork_cwd:str=sys.argv[3]
-        self._js_path:str= sys.argv[4]  # "/frida-home/frida-agent-4instrmcpp/enumerateImports.js"
+        self.dork_cwd:str="/tmp/"
+        self._js_path:str= "/fridaAnlzAp/frida_js/InterceptFnSym.js"
 
         self._stop_requested:threading.Event = threading.Event()
         self._reactor:frida_tools.reactor.Reactor = Reactor(run_until_return=lambda reactor: self._stop_requested.wait())
@@ -64,7 +62,7 @@ class Application(object):
 
     def _start(self):
         print(f"y spawn(program={self.dork_exe_path}, argv={self._dork_args},cwd={self.dork_cwd})" )
-        pid:int = self._device.spawn(program=self.dork_exe_path, argv=self._dork_args,cwd=self.dork_cwd,stdio="pipe")
+        pid:int = self._device.spawn(program=self.dork_exe_path, argv=self._dork_args,cwd=self.dork_cwd,stdio="inherit")
         self._instrument(pid)
 
     def _stop_if_idle(self):
@@ -80,12 +78,14 @@ class Application(object):
         session.enable_child_gating()
         print("y create_script()")
         script_text:str=Util.read_text(self._js_path)#"/frida-home/frida-agent-4instrmcpp/attach_operator_new__constructor.js"
-        script_text=script_text.replace("_dork_exe_", self.dork_exe_name)
-        script_text=script_text.replace("__dork_exe_full_path__", self.dork_exe_path)
+        # script_text=script_text.replace("_dork_exe_", self.dork_exe_name)
+        # script_text=script_text.replace("__dork_exe_full_path__", self.dork_exe_path)
         # print(f"script_text:{script_text}")
         script:frida.core.Script = session.create_script(script_text)
         script.on("message", lambda message, data:
-            self._reactor.schedule(lambda: self._on_message(pid, message)))
+            self._reactor.schedule(lambda: self._on_message(pid, message,data)))  
+        #_on_message的方法签名　参见　frida_js的send方法签名
+        # send方法签名　在 /fridaAnlzAp/frida_js/node_modules/@types/frida-gum/index.d.ts
         print("y load()")
         script.load()
         print("y resume(pid={})".format(pid))
@@ -100,9 +100,14 @@ class Application(object):
         print("x detached: pid={}, reason='{}'".format(pid, reason))
         self._sessions.remove(session)
         self._reactor.schedule(self._stop_if_idle, delay=0.5)
+        self.app_log_f.close()
+        self.app_log_f=None
 
-    def _on_message(self, pid, message):
-        print("x message: pid={}, payload={}".format(pid, message ))
+    def _on_message(self, pid, message,data):
+        #_on_message的方法签名　参见　frida_js的send方法签名
+        # send方法签名　在 /fridaAnlzAp/frida_js/node_modules/@types/frida-gum/index.d.ts
+        print("x message: pid={}, payload={}".format(pid, message ),file=self.app_log_f)
+        pass
 
 
 app = Application()

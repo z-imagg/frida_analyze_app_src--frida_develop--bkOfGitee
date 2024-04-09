@@ -22,3 +22,5 @@ firda_example/.idea/
 .idea/
 
 firda_example/example/__handlers__/
+
+.venv/
