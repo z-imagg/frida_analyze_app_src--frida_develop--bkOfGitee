@@ -112,6 +112,7 @@ class Application(object):
     FnCallLogLinePrefix = "\n__@__@";
 
     def _on_message(self, pid, message:typing.Dict[str,typing.Any],data:bytes):
+        print("datT,",type(data)) #type(data)==<class 'bytes'>
         #_on_message的方法签名　参见　frida_js的send方法签名
         # send方法签名　在 /fridaAnlzAp/frida_js/node_modules/@types/frida-gum/index.d.ts
         assert message is not None
