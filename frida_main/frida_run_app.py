@@ -101,7 +101,8 @@ class Application(object):
         self._reactor.schedule(self._stop_if_idle, delay=0.5)
 
     def _on_message(self, pid, message,data):
-        print("x message: pid={}, payload={}".format(pid, message ))
+        # print("x message: pid={}, payload={}".format(pid, message ))
+        pass
 
 
 app = Application()
