@@ -35,7 +35,7 @@ class Application(object):
         print(sys.argv)
         # _assert(not len(sys.argv) >= 5, f"{__name__} dork_exe_path dork_arg_file dork_cwd js_path ")
         self.dork_exe_path: str = "/fridaAnlzAp/cgsecurity--testdisk/src/testdisk"  # /instrmcpp/dork/cmake-build-debug/dork.exe
-        self.dork_exe_name: str = Path(self.dork_exe_path).name
+        self.dork_exe_name: str = "testdisk"
 
         #hd.img　生成　参考:  http://giteaz:3000/bal/cmd-wrap/src/tag/v2.2.simpl/build_testdisk.md
         self._dork_args: List[str] =["/fridaAnlzAp/cgsecurity--testdisk/src/hd.img"]
