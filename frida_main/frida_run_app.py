@@ -61,7 +61,7 @@ class Application(object):
 
     def _start(self):
         print(f"y spawn(program={self.dork_exe_path}, argv={self._dork_args},cwd={self.dork_cwd})" )
-        pid:int = self._device.spawn(program=self.dork_exe_path, argv=self._dork_args,cwd=self.dork_cwd,stdio="pipe")
+        pid:int = self._device.spawn(program=self.dork_exe_path, argv=self._dork_args,cwd=self.dork_cwd,stdio="inherit")
         self._instrument(pid)
 
     def _stop_if_idle(self):
