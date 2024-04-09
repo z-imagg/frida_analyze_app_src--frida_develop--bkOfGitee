@@ -41,7 +41,7 @@ class Application(object):
         #hd.img　生成　参考:  http://giteaz:3000/bal/cmd-wrap/src/tag/v2.2.simpl/build_testdisk.md
         self._dork_args: List[str] =["/fridaAnlzAp/cgsecurity--testdisk/src/hd.img"]
 
-        self.dork_cwd:str="/"
+        self.dork_cwd:str="/tmp/"
         self._js_path:str= "/fridaAnlzAp/frida_js/InterceptFnSym.js"
 
         self._stop_requested:threading.Event = threading.Event()
