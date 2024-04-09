@@ -9,7 +9,7 @@ python dork_exe_path dork_arg_file dork_cwd js_path
 """
 #ref: https://www.anquanke.com/post/id/177597
 from __future__ import print_function
-
+import typing
 from pathlib import Path
 from typing import List
 
@@ -33,6 +33,7 @@ def _assert(err:bool,errMsg:str):
 class Application(object):
     def __init__(self):
         self.app_log_f=open("./app_log.txt","w")
+        self.app_fnCallLog_f=open("./app_fnCallLog.txt","w")
         print(sys.argv)
         # _assert(not len(sys.argv) >= 5, f"{__name__} dork_exe_path dork_arg_file dork_cwd js_path ")
         self.dork_exe_path: str = "/fridaAnlzAp/cgsecurity--testdisk/src/testdisk"  # /instrmcpp/dork/cmake-build-debug/dork.exe
@@ -100,13 +101,27 @@ class Application(object):
         print("x detached: pid={}, reason='{}'".format(pid, reason))
         self._sessions.remove(session)
         self._reactor.schedule(self._stop_if_idle, delay=0.5)
+        
+        #关闭日志文件
         self.app_log_f.close()
         self.app_log_f=None
+        self.app_fnCallLog_f.close()
+        self.app_fnCallLog_f=None
 
-    def _on_message(self, pid, message,data):
+
+    FnCallLogLinePrefix = "\n__@__@";
+
+    def _on_message(self, pid, message:typing.Dict[str,typing.Any],data:bytes):
         #_on_message的方法签名　参见　frida_js的send方法签名
         # send方法签名　在 /fridaAnlzAp/frida_js/node_modules/@types/frida-gum/index.d.ts
-        print("x message: pid={}, payload={}".format(pid, message ),file=self.app_log_f)
+        assert message is not None
+        assert message.__contains__("payload")
+        payload:str=message["payload"]
+        if payload.startswith(Application.FnCallLogLinePrefix):#若是fnCallIdLog
+            payload=payload.replace(Application.FnCallLogLinePrefix,"")
+            print(payload,file=self.app_fnCallLog_f)
+        else:    
+            print("x message: pid={}, payload={}".format(pid, message ),file=self.app_log_f)
         pass
 
 
