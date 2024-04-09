@@ -39,7 +39,7 @@ class Application(object):
         self.dork_exe_name: str = "testdisk"
 
         #hd.img　生成　参考:  http://giteaz:3000/bal/cmd-wrap/src/tag/v2.2.simpl/build_testdisk.md
-        self._dork_args: List[str] =["/fridaAnlzAp/cgsecurity--testdisk/src/hd.img"]
+        self._dork_args: List[str] =["/fridaAnlzAp/cgsecurity--testdisk/hd.img"]
 
         self.dork_cwd:str="/tmp/"
         self._js_path:str= "/fridaAnlzAp/frida_js/InterceptFnSym.js"
