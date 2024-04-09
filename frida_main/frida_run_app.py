@@ -32,6 +32,7 @@ def _assert(err:bool,errMsg:str):
 
 class Application(object):
     def __init__(self):
+        self.app_log_f=open("./app_log.txt","tx")
         print(sys.argv)
         # _assert(not len(sys.argv) >= 5, f"{__name__} dork_exe_path dork_arg_file dork_cwd js_path ")
         self.dork_exe_path: str = "/fridaAnlzAp/cgsecurity--testdisk/src/testdisk"  # /instrmcpp/dork/cmake-build-debug/dork.exe
@@ -99,9 +100,13 @@ class Application(object):
         print("x detached: pid={}, reason='{}'".format(pid, reason))
         self._sessions.remove(session)
         self._reactor.schedule(self._stop_if_idle, delay=0.5)
+        self.app_log_f.close()
+        self.app_log_f=None
 
     def _on_message(self, pid, message,data):
-        # print("x message: pid={}, payload={}".format(pid, message ))
+        #_on_message的方法签名　参见　frida_js的send方法签名
+        # send方法签名　在 /fridaAnlzAp/frida_js/node_modules/@types/frida-gum/index.d.ts
+        print("x message: pid={}, payload={}".format(pid, message ),file=self.app_log_f)
         pass
 
 
