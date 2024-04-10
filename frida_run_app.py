@@ -74,6 +74,10 @@ class Application(object):
         print("y attach(pid={})".format(pid))
         session:frida.core.Session = self._device.attach(pid)
         
+        session.on("detached", lambda reason:
+            self._reactor.schedule(lambda: self._on_detached(pid, session, reason)))
+        print("y enable_child_gating()")
+        
         print("y create_script()")
         script_text:str=Util.read_text(self._js_path)#"/frida-home/frida-agent-4instrmcpp/attach_operator_new__constructor.js"
         # script_text=script_text.replace("_dork_exe_", self.dork_exe_name)
@@ -87,9 +91,6 @@ class Application(object):
         print("y load()")
         script.load()
         
-        session.on("detached", lambda reason:
-            self._reactor.schedule(lambda: self._on_detached(pid, session, reason)))
-        print("y enable_child_gating()")
         session.enable_child_gating()
         print("y resume(pid={})".format(pid))
         self._device.resume(pid)
