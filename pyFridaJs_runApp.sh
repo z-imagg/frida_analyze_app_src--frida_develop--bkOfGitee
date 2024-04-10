@@ -35,6 +35,7 @@ python frida_run_app.py
 PureLogF="frida-out-Pure-*.log"
 md5sum $PureLogF > frida-out-Pure.md5sum.txt
 
+echo  "获得的产物日志状况:"
 ls -lh $PureLogF ; wc -l $PureLogF
 
 #最终产物日志文件名举例： frida-out-Pure-1712031317.log  
@@ -42,3 +43,21 @@ ls -lh $PureLogF ; wc -l $PureLogF
 
 #查看elf文件中符号名举例
 # readelf --symbols  /fridaAnlzAp/cgsecurity--testdisk/src/testdisk  | grep main
+
+echo "以下对账: 对于 frida获得的日志的第一行,  断言  '模块地址-函数地址 == readelf读取该函数名获得的偏移地址' ，请人工观看"
+# sudo apt install -y jq
+# 获取第一行日志
+Line0JsonTxt=$(head -n 1 $PureLogF)
+# 读取第一行日志中字段fnAdr
+Line0_fnAdr=$(echo $Line0JsonTxt |jq -r '.fnAdr')
+# 读取第一行日志中字段modueBase
+Line0_modueBase=$(echo $Line0JsonTxt |jq -r '.modueBase')
+# 计算 模块地址-函数地址
+Line0_fnOffset=$((Line0_fnAdr-Line0_modueBase))
+printf "frida所得偏移地址为0X%x\n", $Line0_fnOffset 
+
+# 读取第一行日志中字段fnSym.name
+Line0_fnName=$(echo $Line0JsonTxt |jq -r '.fnSym.name')
+echo -n "readelf读取该函数名获得的偏移地址: "
+readelf --symbols  /fridaAnlzAp/cgsecurity--testdisk/src/testdisk  | grep $Line0_fnName
+
