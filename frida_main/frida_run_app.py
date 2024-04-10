@@ -24,6 +24,11 @@ import sys
 
 from LambdaUtil import LambdaUtil
 
+import time
+def abs_ms_int_from1970():
+    _abs_ms_float_from1970:float=time.time()
+    _abs_ms_int_from1970:int=int(_abs_ms_float_from1970)
+    return _abs_ms_int_from1970
 
 def _assert(err:bool,errMsg:str):
     if err is None or err:
@@ -32,8 +37,9 @@ def _assert(err:bool,errMsg:str):
 
 class Application(object):
     def __init__(self):
-        self.app_log_f=open("./app_log.txt","w")
-        self.app_fnCallLog_f=open("./app_fnCallLog.txt","w")
+        now_abs_ms:int=abs_ms_int_from1970()
+        self.app_log_f=open(f"./frida-out-NotBusz-{now_abs_ms}.log","w")
+        self.app_fnCallLog_f=open(f"./frida-out-Pure-{now_abs_ms}.log","w")
         print(sys.argv)
         # _assert(not len(sys.argv) >= 5, f"{__name__} dork_exe_path dork_arg_file dork_cwd js_path ")
         self.dork_exe_path: str = "/fridaAnlzAp/cgsecurity--testdisk/src/testdisk"  # /instrmcpp/dork/cmake-build-debug/dork.exe
