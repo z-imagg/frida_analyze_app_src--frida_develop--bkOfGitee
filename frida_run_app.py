@@ -25,7 +25,7 @@ from frida_tools.application import ConsoleApplication
 import sys
 
 
-_options=Namespace(  target=('file', ['/fridaAnlzAp/cgsecurity--testdisk/src/testdisk']),    args=['/fridaAnlzAp/cgsecurity--testdisk/hd.imgxx'],  user_scripts=['/fridaAnlzAp/frida_js/InterceptFnSym.js'],     logfile='1.log', )
+_options=Namespace(device_id=None,   target=('file', ['/fridaAnlzAp/cgsecurity--testdisk/src/testdisk']),    args=['/fridaAnlzAp/cgsecurity--testdisk/hd.imgxx'],  user_scripts=['/fridaAnlzAp/frida_js/InterceptFnSym.js'],     logfile='1.log', )
 _stop_requested:threading.Event = threading.Event()
 app=ConsoleApplication(
     run_until_return=lambda reactor: _stop_requested.wait(),
