@@ -29,7 +29,10 @@ rm -frv *.log
 
 python frida_run_app.py
 
-md5sum frida-out-Pure-*.log > frida-out-Pure.md5sum.txt
+PureLogF="frida-out-Pure-*.log"
+md5sum $PureLogF > frida-out-Pure.md5sum.txt
+
+ls -lh $PureLogF ; wc -l $PureLogF
 
 #最终产物日志文件名举例： frida-out-Pure-1712031317.log  
 #    其数字签名举例： frida-out-Pure-1712031317.log.md5sum.txt
