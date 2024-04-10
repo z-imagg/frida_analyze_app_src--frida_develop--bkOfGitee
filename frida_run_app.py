@@ -58,8 +58,8 @@ class Application(object):
         self._device:frida.core.Device = frida.get_local_device()
         self._sessions = set()
 
-        self._device.on("spawn-added", lambda child:
-            self._reactor.schedule(lambda: self._on_delivered(child)))
+        # self._device.on("spawn-added", lambda child:
+        #     self._reactor.schedule(lambda: self._on_delivered(child)))
     #     ValueError: Device does not have a signal named 'delivered', it only has: 'spawn-added', 'spawn-removed', 'child-added', 'child-removed', 'process-crashed', 'output', 'uninjected', 'lost'
 
     def _on_delivered(self, child):
@@ -132,7 +132,7 @@ class Application(object):
     def _start(self):
         print(f"y spawn(program={self.dork_exe_path}, argv={self._dork_args},cwd={self.dork_cwd})" )
         pid:int = self._device.spawn(program=self.dork_exe_path, argv=self._dork_args,cwd=self.dork_cwd,stdio="inherit")
-        # self._instrument(pid)
+        self._instrument(pid)
 
 app = Application()
 app.run()
