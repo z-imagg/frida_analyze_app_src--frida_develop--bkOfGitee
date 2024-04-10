@@ -62,16 +62,9 @@ class Application(object):
             self._reactor.schedule(lambda: self._on_delivered(child)))
     #     ValueError: Device does not have a signal named 'delivered', it only has: 'spawn-added', 'spawn-removed', 'child-added', 'child-removed', 'process-crashed', 'output', 'uninjected', 'lost'
 
-    def run(self):
-        # ._reactor.schedule(f) : 当前线程 启动新线程 新线程运行内容为f, 直到新线程运行完 才返回当前线程 : 即 主 异步调用 函数f 且 等 该函数f 返回
-        self._reactor.schedule(lambda: self._start())
-
-        self._reactor.run()
-
-    def _start(self):
-        print(f"y spawn(program={self.dork_exe_path}, argv={self._dork_args},cwd={self.dork_cwd})" )
-        pid:int = self._device.spawn(program=self.dork_exe_path, argv=self._dork_args,cwd=self.dork_cwd,stdio="inherit")
-        self._instrument(pid)
+    def _on_delivered(self, child):
+        print("x delivered: {}".format(child))
+        self._instrument(child.pid)
 
     def _stop_if_idle(self):
         if len(self._sessions) == 0:
@@ -102,10 +95,6 @@ class Application(object):
         self._device.resume(pid)
         self._sessions.add(session)
 
-    def _on_delivered(self, child):
-        print("x delivered: {}".format(child))
-        self._instrument(child.pid)
-
     def _on_detached(self, pid, session, reason):
         print("x detached: pid={}, reason='{}'".format(pid, reason))
         self._sessions.remove(session)
@@ -132,7 +121,17 @@ class Application(object):
         else:    
             print("x message: pid={}, payload={}".format(pid, message ),file=self.app_log_f)
         pass
+        
+    def run(self):
+        # ._reactor.schedule(f) : 当前线程 启动新线程 新线程运行内容为f, 直到新线程运行完 才返回当前线程 : 即 主 异步调用 函数f 且 等 该函数f 返回
+        self._reactor.schedule(lambda: self._start())
 
+        self._reactor.run()
+        
+    def _start(self):
+        print(f"y spawn(program={self.dork_exe_path}, argv={self._dork_args},cwd={self.dork_cwd})" )
+        pid:int = self._device.spawn(program=self.dork_exe_path, argv=self._dork_args,cwd=self.dork_cwd,stdio="inherit")
+        self._instrument(pid)
 
 app = Application()
 app.run()
