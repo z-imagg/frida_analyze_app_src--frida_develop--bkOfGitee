@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+#重新编译 ts 为 js 
+bash -x /fridaAnlzAp/frida_js/rebuild_ts.sh
+
 #去此脚本所在目录
 f=$(readlink -f ${BASH_SOURCE[0]})  ; d=$(dirname $f)
 cd $d
