@@ -122,6 +122,7 @@ class Application(object):
             print("x message: pid={}, payload={}".format(pid, message ),file=self.app_log_f)
         pass
         
+################################
     def run(self):
         # ._reactor.schedule(f) : 当前线程 启动新线程 新线程运行内容为f, 直到新线程运行完 才返回当前线程 : 即 主 异步调用 函数f 且 等 该函数f 返回
         self._reactor.schedule(lambda: self._start())
@@ -131,7 +132,7 @@ class Application(object):
     def _start(self):
         print(f"y spawn(program={self.dork_exe_path}, argv={self._dork_args},cwd={self.dork_cwd})" )
         pid:int = self._device.spawn(program=self.dork_exe_path, argv=self._dork_args,cwd=self.dork_cwd,stdio="inherit")
-        self._instrument(pid)
+        # self._instrument(pid)
 
 app = Application()
 app.run()
